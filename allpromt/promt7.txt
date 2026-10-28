@@ -1,0 +1,588 @@
+You are a senior Laravel 12 architect, payment systems engineer, database designer, and cybersecurity expert.
+
+Upgrade my existing Laravel logistics/consignment application by implementing a fully integrated, enterprise-grade Manual Bank Transfer payment gateway as part of the existing Multiple Payment Gateway System.
+
+This is NOT a new payment module.
+
+It must extend and integrate into the existing payment architecture without creating duplicate controllers, models, services, routes, database tables, or settings pages.
+
+Inspect the existing project before making any changes.
+
+==================================================
+PROJECT ARCHITECTURE
+==================================================
+
+The project already contains:
+
+• Admin Dashboard
+• Guest Tracking System
+• Shipment Management
+• Payment Request System
+• Multiple Payment Gateway Settings
+• Shipment Timeline
+• Tracking Page
+• Shipment History
+• Payment History
+• Professional Receipt System
+
+Integrate Bank Transfer into this architecture.
+
+==================================================
+CORE REQUIREMENT
+==================================================
+
+Bank Transfer must behave exactly like every other payment gateway.
+
+Example:
+
+Admin
+↓
+
+Creates Shipment
+↓
+
+Creates Payment Request
+↓
+
+Selects available payment methods
+
+☑ Flutterwave
+
+☑ Stripe
+
+☑ PayPal
+
+☑ Crypto
+
+☑ Manual Bank Transfer
+
+↓
+
+Guest searches shipment
+
+↓
+
+Only enabled payment gateways are displayed.
+
+==================================================
+ADMIN PAYMENT SETTINGS
+==================================================
+
+Upgrade the existing Admin Payment Settings.
+
+DO NOT create another settings page.
+
+Inside:
+
+Admin
+→ Settings
+→ Payment Gateways
+
+Add:
+
+Manual Bank Transfer
+
+Status
+[Enable / Disable]
+
+The Admin must be able to:
+
+• Enable/Disable Bank Transfer
+• Add unlimited bank accounts
+• Edit bank accounts
+• Delete bank accounts
+• Set default account
+• Reorder accounts
+• Activate/deactivate accounts
+
+Each bank account must support:
+
+• Bank Logo
+• Bank Name
+• Account Name
+• Account Number
+• SWIFT/BIC
+• IBAN
+• Routing Number
+• Branch Name
+• Branch Address
+• Currency
+• Country
+• Payment Instructions
+• QR Code (optional)
+• Status
+
+Everything must be editable.
+
+Changes must immediately reflect throughout the application.
+
+==================================================
+MULTI-COUNTRY SUPPORT
+==================================================
+
+Support international bank accounts.
+
+Example:
+
+United States
+
+United Kingdom
+
+Canada
+
+Nigeria
+
+Germany
+
+Australia
+
+The Admin decides which accounts are available.
+
+Support multiple currencies.
+
+==================================================
+PAYMENT REQUEST
+==================================================
+
+Upgrade the existing Payment Request module.
+
+When creating a payment request the Admin can choose:
+
+Available Payment Methods
+
+☑ Flutterwave
+
+☑ Stripe
+
+☑ PayPal
+
+☑ Crypto
+
+☑ Manual Bank Transfer
+
+Only selected payment methods appear to Guests.
+
+==================================================
+BANK TRANSFER PAGE
+==================================================
+
+The Guest should see a premium payment interface.
+
+Display:
+
+Company Logo
+
+Payment Title
+
+Tracking Number
+
+Shipment Number
+
+Payment Reason
+
+Amount
+
+Currency
+
+Reference Number
+
+Bank Logo
+
+Bank Name
+
+Account Name
+
+Account Number
+
+SWIFT
+
+IBAN
+
+Payment Instructions
+
+Copy Account Number
+
+Copy Reference
+
+Print Instructions
+
+Download PDF Instructions
+
+Upload Payment Proof
+
+Submit Payment
+
+Everything must be responsive.
+
+==================================================
+PAYMENT REFERENCE
+==================================================
+
+Automatically generate a globally unique payment reference.
+
+Example:
+
+PAY-GEL-2026-8F2KX91D
+
+Requirements:
+
+• Never duplicated
+• Linked to shipment
+• Linked to payment request
+• Linked to uploaded proof
+• Searchable
+
+==================================================
+PAYMENT PROOF
+==================================================
+
+Support secure uploads.
+
+Allowed:
+
+JPG
+
+PNG
+
+PDF
+
+Maximum size configurable.
+
+Validate:
+
+File type
+
+Extension
+
+Mime type
+
+Size
+
+Security
+
+Store securely.
+
+Generate file hash.
+
+Prevent duplicate uploads.
+
+==================================================
+ADMIN VERIFICATION
+==================================================
+
+Upgrade:
+
+Admin
+→ Payments
+
+Add:
+
+Manual Bank Transfers
+
+Features:
+
+Pending Payments
+
+Awaiting Verification
+
+Approved
+
+Rejected
+
+Cancelled
+
+Expired
+
+Admin can:
+
+View payment
+
+View uploaded receipt
+
+Zoom image
+
+Download receipt
+
+Approve
+
+Reject
+
+Request resubmission
+
+Add internal notes
+
+Everything updates instantly.
+
+==================================================
+SHIPMENT INTEGRATION
+==================================================
+
+When Admin approves payment:
+
+Automatically update:
+
+Payment Status
+
+Shipment Status
+
+Timeline
+
+Tracking History
+
+Receipt
+
+Activity Log
+
+Guest Tracking Page
+
+No manual refresh required.
+
+==================================================
+AUDIT LOG
+==================================================
+
+Log every action.
+
+Record:
+
+Payment Created
+
+Proof Uploaded
+
+Viewed
+
+Approved
+
+Rejected
+
+Resubmitted
+
+Cancelled
+
+Admin User
+
+IP Address
+
+Date
+
+Time
+
+Old Status
+
+New Status
+
+Nothing should happen without an audit log.
+
+==================================================
+NOTIFICATIONS
+==================================================
+
+Automatically notify Guest when:
+
+Payment requested
+
+Payment received
+
+Proof uploaded
+
+Approved
+
+Rejected
+
+Need resubmission
+
+Cancelled
+
+Support:
+
+Email
+
+System notification
+
+Tracking page notification
+
+==================================================
+PAYMENT HISTORY
+==================================================
+
+Guest can only see payment history belonging to the searched tracking number.
+
+Never expose another shipment.
+
+Display:
+
+Payment Timeline
+
+Status Changes
+
+Admin Notes (where appropriate)
+
+Uploaded Receipt
+
+Approval Date
+
+Payment Reference
+
+==================================================
+REPORTING
+==================================================
+
+Upgrade reports.
+
+Support:
+
+Pending Bank Transfers
+
+Approved
+
+Rejected
+
+Revenue
+
+Outstanding Payments
+
+Date Range
+
+Currency
+
+Export:
+
+Excel
+
+CSV
+
+PDF
+
+==================================================
+SECURITY
+==================================================
+
+Guest CANNOT:
+
+Change payment amount
+
+Change payment reference
+
+Change shipment
+
+Approve payment
+
+Reject payment
+
+View another shipment
+
+Upload dangerous files
+
+Upload oversized files
+
+Access Admin routes
+
+Only Admin can:
+
+Approve
+
+Reject
+
+Edit bank settings
+
+Delete bank accounts
+
+Enable/Disable payment methods
+
+==================================================
+DATABASE
+==================================================
+
+Inspect existing tables first.
+
+Reuse:
+
+Payments
+
+Payment Requests
+
+Shipments
+
+Shipment History
+
+Payment History
+
+Settings
+
+Admin
+
+Tracking
+
+Only create migrations if absolutely necessary.
+
+No duplicate tables.
+
+==================================================
+UI
+==================================================
+
+Maintain the same professional design as the rest of the application.
+
+Responsive.
+
+Fast.
+
+Modern.
+
+Professional.
+
+Consistent.
+
+==================================================
+TESTING
+==================================================
+
+Before declaring the feature complete, verify:
+
+✓ Bank Transfer appears only when enabled.
+
+✓ Disabled Bank Transfer disappears.
+
+✓ Admin creates payment request.
+
+✓ Guest sees correct payment methods.
+
+✓ Guest uploads payment proof.
+
+✓ Validation works.
+
+✓ Admin receives notification.
+
+✓ Admin approves payment.
+
+✓ Shipment updates automatically.
+
+✓ Guest tracking page updates.
+
+✓ Receipt updates.
+
+✓ Timeline updates.
+
+✓ Audit log records all actions.
+
+✓ Reports include Bank Transfer payments.
+
+✓ Multiple bank accounts work.
+
+✓ Multiple currencies work.
+
+✓ No duplicate database records are created.
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Do NOT create a separate Bank Transfer system.
+
+Upgrade the existing payment architecture so that Bank Transfer behaves exactly like Flutterwave, Stripe, PayPal, and Crypto.
+
+Maintain a clean service-oriented architecture using the existing payment interfaces and services.
+
+Every payment gateway—including Bank Transfer—must use the same payment request lifecycle, history, reporting, notification, audit logging, and receipt system.
+
+Inspect the project first, refactor where necessary, eliminate duplicate code, and ensure the implementation is production-ready, secure, scalable, and fully tested before marking the task as complete.

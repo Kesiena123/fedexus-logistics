@@ -1,0 +1,347 @@
+You are a Senior Laravel Architect, Software Performance Engineer, Database Optimization Expert, and Code Refactoring Specialist.
+
+Perform a complete audit, optimization, cleanup, and refactoring of my Laravel logistics/consignment application.
+
+IMPORTANT:
+
+Do not blindly rewrite the project.
+
+Analyze the entire codebase first.
+
+Identify every unused, redundant, duplicated, obsolete, inefficient, insecure, or unnecessary component before making changes.
+
+The goal is to create a clean, professional, scalable, secure, maintainable, and production-ready application.
+
+==================================================
+OBJECTIVES
+==================================================
+
+1. Remove unused code.
+2. Remove dead code.
+3. Remove duplicate code.
+4. Remove unused packages.
+5. Remove unused routes.
+6. Remove unused controllers.
+7. Remove unused models.
+8. Remove unused views.
+9. Remove unused Blade components.
+10. Remove unused middleware.
+11. Remove unused services.
+12. Remove unused APIs.
+13. Remove unused database tables.
+14. Remove unused migrations.
+15. Remove unused assets.
+16. Remove unused JavaScript files.
+17. Remove unused CSS files.
+18. Remove unused images.
+19. Remove unused configuration files.
+20. Improve performance.
+21. Improve maintainability.
+22. Improve scalability.
+23. Improve security.
+
+==================================================
+PROJECT ANALYSIS
+==================================================
+
+Perform a complete codebase inspection.
+
+Generate a report showing:
+
+• Unused Controllers
+• Unused Models
+• Unused Routes
+• Unused Middleware
+• Unused Services
+• Unused Views
+• Unused Components
+• Unused Database Tables
+• Unused Assets
+• Duplicate Functions
+• Duplicate Queries
+• Duplicate Logic
+• Security Issues
+• Performance Bottlenecks
+
+Do not delete anything until dependencies are verified.
+
+==================================================
+CODE REFACTORING
+==================================================
+
+Refactor the project using Laravel best practices.
+
+Requirements:
+
+• Clean Architecture
+• Service Layer Architecture
+• Repository Pattern where beneficial
+• SOLID Principles
+• DRY Principles
+• KISS Principles
+
+Eliminate:
+
+• Spaghetti Code
+• Duplicate Logic
+• Repeated Queries
+• Hardcoded Values
+• Unnecessary Conditionals
+• Large Controllers
+• Large Blade Files
+
+Move business logic into services.
+
+Keep controllers thin.
+
+==================================================
+DATABASE OPTIMIZATION
+==================================================
+
+Analyze the database structure.
+
+Identify:
+
+• Unused Tables
+• Unused Columns
+• Missing Indexes
+• Duplicate Data Structures
+• Inefficient Relationships
+
+Optimize:
+
+• Foreign Keys
+• Indexes
+• Queries
+• Relationships
+
+Prevent:
+
+• N+1 Queries
+• Redundant Queries
+• Full Table Scans
+
+Use eager loading where appropriate.
+
+==================================================
+PERFORMANCE OPTIMIZATION
+==================================================
+
+Optimize:
+
+• Page Load Speed
+• Database Queries
+• Memory Usage
+• Asset Loading
+• File Uploads
+• Tracking Searches
+• Shipment Queries
+• Payment Queries
+• Chat Queries
+
+Reduce server resource consumption.
+
+Optimize for shared hosting environments.
+
+==================================================
+LARAVEL OPTIMIZATION
+==================================================
+
+Optimize:
+
+• Route Loading
+• Configuration Loading
+• View Rendering
+• Query Execution
+• Caching Strategy
+
+Remove unnecessary service providers.
+
+Remove unnecessary facades.
+
+Remove unnecessary dependencies.
+
+==================================================
+SECURITY AUDIT
+==================================================
+
+Identify and fix:
+
+• SQL Injection Risks
+• XSS Vulnerabilities
+• CSRF Issues
+• Insecure File Uploads
+• Mass Assignment Issues
+• Authentication Weaknesses
+• Authorization Weaknesses
+
+Validate all inputs.
+
+Sanitize all outputs.
+
+Protect Admin routes.
+
+==================================================
+FRONTEND CLEANUP
+==================================================
+
+Remove:
+
+• Unused CSS
+• Unused JavaScript
+• Unused Components
+• Duplicate UI Elements
+• Duplicate Pages
+
+Optimize:
+
+• Blade Templates
+• Layouts
+• Asset Loading
+
+Create reusable components.
+
+==================================================
+ADMIN PANEL OPTIMIZATION
+==================================================
+
+Review:
+
+• Shipment Management
+• Payment Requests
+• Tracking Management
+• Chat System
+• Reports
+• Settings
+
+Remove duplicate functionality.
+
+Ensure every feature has a clear purpose.
+
+==================================================
+PAYMENT SYSTEM OPTIMIZATION
+==================================================
+
+Review:
+
+• Flutterwave
+• Bank Transfer
+• Pay On Delivery
+
+Remove duplicate payment logic.
+
+Create a unified payment architecture.
+
+Ensure scalability for future gateways.
+
+==================================================
+TRACKING SYSTEM OPTIMIZATION
+==================================================
+
+Review:
+
+• Shipment Tracking
+• Tracking History
+• Tracking Timeline
+• Tracking Search
+
+Optimize performance.
+
+Improve database efficiency.
+
+Ensure fast search results.
+
+==================================================
+LIVE CHAT OPTIMIZATION
+==================================================
+
+Review:
+
+• Chat Messages
+• Notifications
+• Attachments
+
+Optimize queries.
+
+Remove duplicate logic.
+
+Ensure scalability.
+
+==================================================
+FILE STORAGE OPTIMIZATION
+==================================================
+
+Remove orphaned files.
+
+Remove unused uploads.
+
+Optimize storage usage.
+
+Improve file organization.
+
+==================================================
+SCALABILITY REQUIREMENTS
+==================================================
+
+Prepare the application for:
+
+• 10,000+ Shipments
+• 100,000+ Tracking Records
+• Thousands of Payment Requests
+• Thousands of Chat Messages
+• Multiple Admin Users
+• Future Payment Gateways
+• Future Feature Expansion
+
+The architecture must scale without major rewrites.
+
+==================================================
+CODE QUALITY
+==================================================
+
+Apply:
+
+• PSR Standards
+• Laravel Best Practices
+• Type Hinting
+• Dependency Injection
+• Proper Naming Conventions
+
+Improve readability and maintainability.
+
+==================================================
+DOCUMENTATION
+==================================================
+
+Generate a complete optimization report showing:
+
+• What was removed
+• What was optimized
+• What was refactored
+• What security issues were fixed
+• What performance improvements were made
+• What scalability improvements were made
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Do not add unnecessary features.
+
+Do not remove any functionality currently used by the application.
+
+Only remove code, files, packages, assets, routes, views, controllers, models, migrations, database structures, and logic that are truly unused or redundant.
+
+The final result must be:
+
+• Clean
+• Professional
+• Secure
+• Scalable
+• Maintainable
+• Optimized
+• Production Ready
+• Shared Hosting Friendly
+• Laravel Best Practice Compliant
+
+Before marking the task complete, verify that every existing feature still works correctly after optimization and refactoring.

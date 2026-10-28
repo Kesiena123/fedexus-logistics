@@ -1,0 +1,275 @@
+# OGAHOSTING + GITHUB DEPLOYMENT PREPARATION — EXISTING LARAVEL LOGISTICS WEBSITE
+
+Act as a senior Laravel engineer and shared-hosting deployment specialist. Prepare my EXISTING logistics website for secure, reliable deployment to OgaHosting through GitHub.
+
+## 1. Critical instructions
+
+- Inspect the entire existing project before modifying any files.
+- Do not rebuild the application from scratch.
+- Do not remove, disable, or break any existing working features.
+- Preserve the current Laravel version and compatible dependencies.
+- Prepare the application for the actual OgaHosting environment; do not assume that SSH, Composer, Git deployment, cron jobs, or particular PHP versions are available.
+- Do not deploy anything or overwrite production files without my explicit approval.
+- Make minimal, safe, tested changes and document every important modification.
+
+## 2. Audit hosting compatibility
+
+Inspect `composer.json`, `composer.lock`, `.env.example`, `config/`, `routes/`, `public/`, `resources/`, `storage/`, database migrations, frontend build files, and all third-party integrations.
+
+Determine the exact requirements for this project:
+
+- Required PHP version and extensions
+- Laravel version compatibility
+- MySQL/MariaDB requirements
+- Composer dependencies
+- Frontend build requirements
+- Writable directories
+- File upload limits
+- Session, cache, and queue drivers
+- Email configuration
+- Storage and public file access
+- Payment gateway requirements
+- Map and external API requirements
+
+Create a deployment-readiness report identifying incompatibilities and missing requirements before changing code.
+
+## 3. Prepare GitHub safely
+
+Prepare the repository for GitHub deployment.
+
+Ensure:
+- `.gitignore` excludes `.env`, secrets, logs, cache files, local databases, user-uploaded files, and unnecessary development files.
+- `.env.example` contains all required variable names with safe placeholder values.
+- `composer.lock` is included and consistent with `composer.json`.
+- Do not commit real API keys, database credentials, SMTP passwords, encryption keys, payment secrets, or production data.
+- Do not commit `vendor/` unless a verified hosting limitation makes it necessary and the alternative is documented.
+- Do not commit `node_modules/`.
+- Include a clear README with deployment instructions.
+- Provide a safe GitHub workflow without exposing deployment credentials.
+
+Check whether the project needs Vite or other frontend assets built before deployment. Prepare a repeatable build process and include only the necessary production assets.
+
+## 4. Configure Laravel for production
+
+Prepare production configuration using Laravel's supported configuration architecture.
+
+Requirements:
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- Correct production `APP_URL`
+- Secure session and cookie settings appropriate to HTTPS
+- Correct database connection settings
+- Production-compatible cache, session, and queue drivers
+- Correct timezone and logging configuration
+- Secure error handling
+- Proper writable permissions for `storage/` and `bootstrap/cache/`
+
+Move infrastructure settings and secrets into `.env`, read them through `config()` in application code, and keep `.env` outside public access.
+
+IMPORTANT:
+Do not move settings managed through the Admin dashboard into `.env`. Website title, logo, configurable payment gateways, bank accounts, and editable website settings must continue to work through the existing database-backed Admin Settings system.
+
+Do not generate a new `APP_KEY` for an existing installation. Preserve the existing production key and encrypted data compatibility.
+
+## 5. Database preparation
+
+Prepare the existing database for OgaHosting MySQL/MariaDB.
+
+- Check all migrations for compatibility.
+- Check SQLite-specific SQL or database assumptions.
+- Check foreign keys, indexes, relationships, and data types.
+- Ensure shipment photos, tracking history, payments, payment requests, chat messages, and settings remain intact.
+- Provide a clean migration plan.
+- Provide instructions for creating the production database and database user in the hosting control panel.
+- Document how to import existing data if migration from a local XAMPP database is needed.
+
+Never run destructive migrations or erase production data automatically.
+
+Do not seed production with demo shipments, fake payments, or test credentials.
+
+If SSH/Artisan is unavailable, provide a safe alternative for importing schema and data through phpMyAdmin. Do not expose a public migration script that anyone can execute.
+
+## 6. Prepare the Laravel public directory
+
+Laravel must serve the website through its `public/` directory, not expose the project root.
+
+Inspect OgaHosting's actual document-root and deployment options before choosing a directory layout.
+
+Prepare the safest compatible solution for the available hosting configuration.
+
+- Keep `.env`, source code, `vendor/`, private storage, and configuration files outside public access wherever the hosting layout permits.
+- Configure URL rewriting and front-controller routing correctly.
+- Ensure CSS, JavaScript, images, and uploaded shipment photos load correctly.
+- Prevent directory listing and direct access to sensitive files.
+- Preserve Laravel's routing, CSRF protection, sessions, and error handling.
+
+Do not assume that copying Laravel's entire project into `public_html` is safe.
+
+## 7. Uploaded files and multiple shipment photos
+
+Preserve the existing multi-photo shipment system.
+
+Verify that:
+- Admin can upload multiple photos when creating shipments.
+- Admin can add, replace, and delete individual photos when editing shipments.
+- Existing photos remain associated with the correct shipment.
+- Uploaded files persist across deployments.
+- Replacing application code does not delete shipment photos.
+- Storage paths and generated URLs work on OgaHosting.
+- Guests see only photos belonging to the shipment they track.
+
+Do not commit real uploaded shipment photos to GitHub. Use persistent hosting storage and document any storage-directory setup required.
+
+## 8. Preserve all existing website features
+
+Audit and test the following features without rebuilding them:
+
+- Admin dashboard and existing Admin login
+- Shipment creation and editing
+- Multiple shipment photos
+- Tracking number generation
+- Guest shipment tracking without customer accounts
+- Shipment status and tracking history
+- Professional shipment tracking map
+- Shipment-specific location data
+- Sender and receiver information
+- Payment requests and payment history
+- Flutterwave integration
+- Manual bank transfer and proof verification
+- Pay on Delivery and payment collection
+- Any existing Stripe, PayPal, or cryptocurrency integrations
+- Guest–Admin live chat
+- Receipts, barcode, and QR code
+- Email notifications
+- Website title, logo, and Admin settings
+- Responsive frontend and existing routes
+
+Do not remove a feature merely because its external credentials are not yet configured. Report missing credentials separately.
+
+## 9. Payment gateway and email configuration
+
+Prepare server-side configuration for the payment gateways that already exist in the project.
+
+- Store secret keys securely in environment variables or the existing secure configuration mechanism.
+- Keep Admin-configurable gateway enable/disable controls working.
+- Preserve test/live environment separation.
+- Validate Flutterwave payment callbacks and verify transactions server-side.
+- Never trust a browser redirect alone as proof of payment.
+- Keep payment amounts, currencies, references, and statuses consistent.
+- Do not expose secrets in JavaScript, GitHub, logs, or error pages.
+
+Prepare SMTP configuration for email notifications. Do not assume the hosting provider supports sending email directly without configuration.
+
+## 10. Shared-hosting compatibility
+
+Inspect the existing application and avoid introducing unsupported infrastructure.
+
+Unless OgaHosting confirms support, do not require:
+- A permanent Node.js server
+- WebSockets or Laravel Reverb
+- Redis
+- Supervisor
+- Long-running queue workers
+- Root privileges
+- Unavailable SSH commands
+- Unsupported cron jobs
+
+If the existing application uses live chat or live map polling, preserve the existing implementation or use efficient AJAX polling if necessary.
+
+Use synchronous processing or other compatible alternatives only where safe. Do not silently disable important features.
+
+## 11. GitHub-to-OgaHosting deployment workflow
+
+Inspect the available deployment options before selecting a workflow.
+
+Preferred order:
+
+1. OgaHosting's supported GitHub/Git deployment integration, if available.
+2. cPanel Git Version Control deployment, if available.
+3. GitHub Actions deployment through a supported secure SSH or FTP/SFTP method, if available.
+4. Manual deployment using GitHub ZIP/download and the hosting file manager if automation is unavailable.
+
+Do not claim any integration exists without verifying it.
+
+If cPanel Git deployment is supported, prepare a suitable `.cpanel.yml` and deployment script only after confirming the actual directory paths, PHP binary, Composer location, and supported commands.
+
+If GitHub Actions is used:
+- Store credentials in GitHub Secrets.
+- Never hardcode credentials.
+- Deploy only from the intended branch.
+- Run tests before production deployment.
+- Avoid uploading `.env`, `.git`, development files, or private data.
+- Avoid deleting persistent uploads.
+- Stop deployment if critical checks fail.
+
+Document which steps are automated and which require manual action.
+
+## 12. Safe deployment and rollback
+
+Create a deployment checklist covering:
+
+1. Back up existing website files.
+2. Export the production database.
+3. Verify PHP version and extensions.
+4. Configure production environment variables.
+5. Create/import the database.
+6. Install production Composer dependencies if supported.
+7. Build or upload frontend assets.
+8. Configure the public document root.
+9. Set writable directory permissions.
+10. Run approved migrations using the supported method.
+11. Clear or rebuild Laravel caches safely.
+12. Test the website.
+13. Verify payment, email, photo, and tracking functionality.
+14. Document rollback steps.
+
+Never overwrite the current production site before backups and a recovery plan are confirmed.
+
+## 13. Testing and validation
+
+Run every test that can be performed locally without production credentials.
+
+Check:
+- Dependency compatibility
+- Application startup
+- Routes and views
+- Database connectivity
+- Migration status
+- Upload and edit workflows
+- Multiple shipment isolation
+- Photo storage persistence
+- Payment callback verification
+- Live chat
+- Map loading
+- CSRF and validation
+- Production error handling
+- Missing environment variables
+- Asset loading
+- Browser console and Laravel logs
+
+Do not invent successful test results. Clearly distinguish tests actually run from tests that require the OgaHosting account.
+
+## 14. Required deliverables
+
+Prepare the existing project and provide:
+
+1. A report of hosting compatibility findings.
+2. The exact files changed and why.
+3. A secure `.env.example`.
+4. An updated `.gitignore`.
+5. Any required deployment configuration files.
+6. A deployment README with exact commands and instructions.
+7. A database migration/import guide.
+8. A production configuration checklist.
+9. A backup and rollback guide.
+10. A list of missing hosting requirements or credentials.
+11. A feature-by-feature test report.
+12. A clear step-by-step guide for connecting GitHub to OgaHosting.
+
+Where account-specific details are unknown, use clearly marked placeholders and tell me what to obtain from OgaHosting. Never invent server paths, credentials, PHP versions, or deployment capabilities.
+
+FINAL REQUIREMENT:
+
+Prepare the existing Laravel logistics website for OgaHosting deployment through GitHub while preserving its existing functionality, database relationships, uploaded photos, payment integrations, and Admin settings.
+
+Make only necessary changes, verify them, and do not declare the project deployment-ready until all identified blockers have been addressed or explicitly documented.

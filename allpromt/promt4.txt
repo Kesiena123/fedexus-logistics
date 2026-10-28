@@ -1,0 +1,439 @@
+Use this prompt to make the AI **repair the existing shipment creation page and make it fully functional from frontend to database**:
+
+```text
+You are a senior Laravel full-stack engineer, database architect, API developer, and QA engineer.
+
+The current "Create Shipment" page in my Laravel logistics application is only a static interface. The form may display correctly, but shipment creation is not actually working end-to-end.
+
+FIX THIS COMPLETELY.
+
+Do not redesign the page unnecessarily. Do not create another mockup. Do not add fake success messages. Connect the existing shipment creation interface to the real Laravel backend, database, validation, file storage, tracking number generation, and related shipment functionality.
+
+==================================================
+CURRENT PROBLEM
+==================================================
+
+The Create Shipment page is currently static.
+
+The form does not properly:
+
+- Submit data to Laravel
+- Validate the data
+- Save the shipment to the database
+- Upload shipment photos
+- Calculate shipment costs
+- Generate a tracking number
+- Create related tracking data
+- Redirect to the created shipment
+- Display real success/error messages
+
+Your job is to inspect the existing project and fix the complete workflow.
+
+==================================================
+STEP 1: AUDIT THE EXISTING PROJECT
+==================================================
+
+Before making changes, inspect:
+
+- Existing Create Shipment Blade page
+- Form fields
+- Routes
+- Controllers
+- Models
+- Migrations
+- Database tables
+- Eloquent relationships
+- Validation
+- File upload logic
+- Storage configuration
+- Tracking number logic
+- Existing shipment detail page
+- Admin shipment list
+- Existing settings
+
+Do not assume that existing code works simply because the UI exists.
+
+Trace the complete workflow:
+
+Create Shipment Form
+→ Route
+→ Controller
+→ Validation
+→ Database
+→ Related Models
+→ File Storage
+→ Tracking Number
+→ Redirect
+→ Shipment Detail Page
+
+Identify and fix all broken or missing parts.
+
+==================================================
+STEP 2: MAKE THE FORM ACTUALLY SUBMIT
+==================================================
+
+The existing Create Shipment form must use a real Laravel POST route.
+
+The form must:
+
+- Use the correct method
+- Use a valid Laravel route
+- Include CSRF protection
+- Submit all fields correctly
+- Preserve old input after validation failure
+- Display validation errors professionally
+- Display a real success message after successful creation
+- Redirect to the correct shipment page after successful creation
+
+Do not use fake JavaScript-only submission.
+
+The shipment must be created through the Laravel backend.
+
+==================================================
+STEP 3: SHIPMENT INFORMATION
+==================================================
+
+The Create Shipment form must properly process:
+
+SENDER INFORMATION:
+
+- Full name
+- Company
+- Email
+- Phone
+- Country
+- State
+- City
+- Address
+- Postal code
+
+RECEIVER INFORMATION:
+
+- Full name
+- Company
+- Email
+- Phone
+- Country
+- State
+- City
+- Address
+- Postal code
+
+SHIPMENT INFORMATION:
+
+- Shipment type
+- Service type
+- Shipping method
+- Description
+- Origin
+- Destination
+- Priority
+- Estimated delivery date
+
+PARCEL INFORMATION:
+
+- Package type
+- Weight
+- Length
+- Width
+- Height
+- Quantity
+- Parcel description
+
+COST INFORMATION:
+
+- Shipping cost
+- Handling fee
+- Insurance fee
+- Customs fee
+- Tax
+- Discount
+- Additional charges
+- Total amount
+
+PAYMENT INFORMATION:
+
+- Payment method
+- Payment status where applicable
+
+Every submitted value must be validated and saved correctly.
+
+==================================================
+STEP 4: SERVER-SIDE VALIDATION
+==================================================
+
+Implement proper Laravel server-side validation.
+
+Validate:
+
+- Required fields
+- Email format
+- Numeric values
+- Positive costs
+- Valid dates
+- Valid status values
+- Valid shipment types
+- Valid payment methods
+- File types
+- File sizes
+- Coordinates where applicable
+
+Never trust values calculated only by JavaScript.
+
+Calculate the final total securely on the server.
+
+Example:
+
+Total =
+Shipping Cost
++ Handling Fee
++ Insurance
++ Customs Fee
++ Tax
++ Additional Charges
+- Discount
+
+The server-calculated total must be the authoritative total.
+
+==================================================
+STEP 5: GENERATE A UNIQUE TRACKING NUMBER
+==================================================
+
+When the shipment is successfully created, automatically generate a unique tracking number.
+
+Example:
+
+GEX-2026-ABC12345
+
+Requirements:
+
+- Must be unique
+- Must not expose the database ID
+- Must be generated server-side
+- Must be searchable
+- Must be stored in the database
+- Must be displayed after creation
+
+Prevent duplicate tracking numbers using both application logic and a database unique constraint.
+
+==================================================
+STEP 6: DATABASE AND ELOQUENT RELATIONSHIPS
+==================================================
+
+Inspect the existing database structure first.
+
+Use existing shipment tables if appropriate.
+
+Do not create duplicate tables unnecessarily.
+
+If required fields are missing, create proper Laravel migrations.
+
+Ensure the shipment model correctly supports related data such as:
+
+- Tracking events
+- Shipment images
+- Route points
+- Payment requests
+
+Use proper Eloquent relationships.
+
+Use a database transaction during shipment creation so that if a critical operation fails, incomplete shipment data is not left in the database.
+
+==================================================
+STEP 7: SHIPMENT PHOTO UPLOAD
+==================================================
+
+Make shipment photo upload fully functional.
+
+The Admin must be able to:
+
+- Upload one or multiple shipment photos
+- Validate file type
+- Validate file size
+- Store files securely
+- Save the correct file path in the database
+- Display uploaded photos on the shipment page
+
+Use Laravel Storage properly.
+
+Do not store unsafe raw filenames.
+
+Do not allow dangerous file types.
+
+If shipment creation fails, handle uploaded files safely and avoid orphaned files where possible.
+
+==================================================
+STEP 8: INITIAL TRACKING RECORD
+==================================================
+
+After successful shipment creation:
+
+- Create the initial shipment tracking record.
+- Set the initial shipment status.
+- Add the initial tracking event.
+- Store the creation date/time.
+- Store the initial location if provided.
+
+The initial tracking history must appear on the public tracking page when the Guest searches the generated tracking number.
+
+==================================================
+STEP 9: LOCATION DATA
+==================================================
+
+If the form includes shipment location fields, save them correctly.
+
+Support:
+
+- Origin location
+- Destination location
+- Current location
+- Latitude
+- Longitude
+
+Validate latitude and longitude.
+
+Do not use fake coordinates.
+
+If the shipment has valid coordinates, the tracking map must be able to display them.
+
+==================================================
+STEP 10: PAYMENT DATA
+==================================================
+
+Save the selected payment method correctly.
+
+Do not automatically mark a payment as successful unless the payment has actually been verified.
+
+If the Admin is only creating a shipment with a payment method selected, store the payment method and appropriate payment status.
+
+Use secure payment verification when payment integration is involved.
+
+==================================================
+STEP 11: ADMIN WORKFLOW
+==================================================
+
+The complete workflow must work:
+
+Admin Login
+→ Open Create Shipment
+→ Fill in Shipment Form
+→ Upload Shipment Photo
+→ Enter Sender Information
+→ Enter Receiver Information
+→ Enter Shipment Information
+→ Enter Parcel Information
+→ Enter Cost Information
+→ Select Payment Method
+→ Submit Form
+→ Validate Data
+→ Calculate Total
+→ Generate Unique Tracking Number
+→ Save Shipment
+→ Save Related Data
+→ Save Uploaded Photos
+→ Create Initial Tracking History
+→ Redirect to Shipment Details
+→ Display Created Shipment
+→ Guest Tracks Using Tracking Number
+
+Every step must actually work.
+
+==================================================
+STEP 12: ERROR HANDLING
+==================================================
+
+Handle errors professionally.
+
+If validation fails:
+
+- Keep the user's entered data
+- Display clear validation messages
+- Do not lose the entire form unnecessarily
+
+If database creation fails:
+
+- Roll back the transaction
+- Display a safe error message
+- Do not display SQL errors or stack traces to the user
+
+If file upload fails:
+
+- Handle the error properly
+- Do not create an incomplete shipment
+
+==================================================
+STEP 13: ADMIN SHIPMENT LIST
+==================================================
+
+After creating a shipment, it must appear in the Admin shipment list immediately.
+
+The Admin must be able to:
+
+- View the shipment
+- Edit the shipment
+- Update status
+- Add tracking history
+- Update location
+- View shipment photos
+- View payment information
+
+All actions must connect to real backend functionality.
+
+==================================================
+STEP 14: TEST THE COMPLETE FUNCTIONALITY
+==================================================
+
+Do not claim completion until you test all of the following:
+
+1. Open Create Shipment page.
+2. Fill all required fields.
+3. Submit the form.
+4. Verify Laravel receives the request.
+5. Verify validation works.
+6. Verify the shipment is saved.
+7. Verify the tracking number is generated.
+8. Verify the tracking number is unique.
+9. Verify the total is calculated correctly on the server.
+10. Verify the shipment photo uploads successfully.
+11. Verify the photo path is saved.
+12. Verify the initial tracking event is created.
+13. Verify the shipment appears in the Admin Panel.
+14. Verify the shipment detail page displays the real data.
+15. Verify the Guest can search using the tracking number.
+16. Verify the tracking page displays the created shipment.
+17. Verify the map can use the saved location data.
+18. Verify invalid form data is rejected.
+19. Verify duplicate tracking numbers cannot occur.
+20. Verify failed transactions do not leave incomplete database records.
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Do not simply make the button appear to work.
+
+Make the entire shipment creation system genuinely functional.
+
+The final implementation must be:
+
+- Fully dynamic
+- Database-connected
+- Secure
+- Validated
+- Transaction-safe
+- Mobile-friendly
+- Compatible with the existing Laravel architecture
+- Connected to tracking
+- Connected to shipment editing
+- Connected to the public tracking page
+
+Start by inspecting the existing Create Shipment page and its complete backend workflow.
+
+Then fix the actual root cause of the problem.
+
+Do not create duplicate functionality.
+Do not use hardcoded data.
+Do not use fake success messages.
+Do not leave placeholder buttons.
+Do not claim the task is complete until the complete Admin → Create Shipment → Database → Tracking Number → Guest Tracking workflow has been tested successfully.
+```

@@ -1,0 +1,550 @@
+You are a senior Laravel payment integration engineer and security-focused full-stack developer.
+
+Implement a complete, production-ready MULTIPLE PAYMENT GATEWAY SYSTEM in my existing Laravel logistics/consignment application.
+
+The system must be fully functional and connected to the existing Admin Panel, shipment system, payment requests, guest tracking page, and database.
+
+Do not create a static settings page or fake payment buttons.
+
+==================================================
+PAYMENT GATEWAYS
+==================================================
+
+Support multiple payment gateways, including:
+
+1. Flutterwave
+2. Stripe
+3. PayPal
+4. Cryptocurrency payment gateway
+5. Manual Bank Transfer
+6. Any additional gateway that can be safely integrated into the existing architecture
+
+The system must use a modular payment gateway architecture so that gateways can be enabled, disabled, configured, and extended without rewriting the entire payment system.
+
+==================================================
+ADMIN PAYMENT SETTINGS
+==================================================
+
+Create a professional Admin Settings → Payment Gateways section.
+
+Each payment gateway must have:
+
+- Enable/Disable toggle
+- Test/Live mode where supported
+- API credentials
+- Secret keys
+- Webhook secret/hash where required
+- Supported currency settings
+- Payment instructions where applicable
+
+Example:
+
+FLUTTERWAVE
+[ ON/OFF ]
+
+Public Key:
+[________________]
+
+Secret Key:
+[________________]
+
+Secret Hash:
+[________________]
+
+Mode:
+[ Test / Live ]
+
+[ SAVE SETTINGS ]
+
+Repeat the same professional structure for every supported gateway.
+
+==================================================
+IMPORTANT SECURITY REQUIREMENTS
+==================================================
+
+Never hardcode API credentials.
+
+Never expose secret keys in:
+
+- Blade templates
+- JavaScript
+- Public API responses
+- Logs
+- Guest pages
+
+Store credentials securely using Laravel environment variables or a secure encrypted database settings system.
+
+If credentials are stored in the database, encrypt sensitive credentials before saving them and decrypt them only on the server when needed.
+
+Mask sensitive credentials in the Admin UI.
+
+Example:
+
+FLWSECK_TEST-**************1234
+
+Only authorized Admin users can view or update payment settings.
+
+==================================================
+ADMIN GATEWAY CONTROL
+==================================================
+
+The Admin must be able to turn payment gateways on or off.
+
+Example:
+
+Flutterwave: ON
+Stripe: ON
+PayPal: OFF
+Crypto: ON
+Bank Transfer: ON
+
+Only enabled gateways should appear to the Guest on the payment page.
+
+If a gateway is disabled:
+
+- It must not appear as a payment option.
+- It must not be usable through a direct URL.
+- The backend must reject attempts to use it.
+
+The Admin's toggle setting must control both:
+
+1. Frontend visibility
+2. Backend payment processing
+
+==================================================
+SHIPMENT PAYMENT REQUEST FLOW
+==================================================
+
+The payment system must work with the existing shipment system.
+
+Workflow:
+
+Admin creates shipment
+        ↓
+Admin creates payment request
+        ↓
+Admin enters:
+- Payment reason
+- Amount
+- Currency
+- Due date where applicable
+        ↓
+Admin selects available payment methods
+        ↓
+Guest searches shipment using tracking number
+        ↓
+Guest sees payment request
+        ↓
+Guest selects an enabled payment gateway
+        ↓
+Guest clicks Pay Now
+        ↓
+Selected gateway checkout opens
+        ↓
+Guest completes payment
+        ↓
+Laravel verifies payment server-side
+        ↓
+Payment status is updated
+        ↓
+Shipment payment status is updated
+        ↓
+Guest sees updated payment status
+
+==================================================
+PAYMENT REQUEST DATA
+==================================================
+
+A payment request should support:
+
+- Shipment ID
+- Tracking number
+- Payment title
+- Payment reason
+- Amount
+- Currency
+- Selected gateway
+- Transaction reference
+- Gateway transaction ID
+- Payment status
+- Pending
+- Processing
+- Paid
+- Failed
+- Cancelled
+- Refunded
+- Payment date
+- Expiry date where applicable
+- Created by Admin
+
+Payment requests must belong to the correct shipment.
+
+A Guest must never be able to view or pay a payment request belonging to another shipment.
+
+==================================================
+FLUTTERWAVE
+==================================================
+
+Implement Flutterwave Standard Checkout.
+
+Requirements:
+
+- Create transaction server-side.
+- Generate a unique transaction reference.
+- Redirect the Guest to Flutterwave checkout.
+- Handle callback.
+- Verify the transaction server-side.
+- Confirm transaction reference.
+- Confirm amount.
+- Confirm currency.
+- Confirm successful status.
+- Update payment only after successful verification.
+- Support webhook notifications.
+- Validate webhook authenticity.
+- Make webhook processing idempotent.
+
+Never mark a payment as successful only because the Guest returned from the payment page.
+
+==================================================
+STRIPE
+==================================================
+
+Implement Stripe Checkout or the most appropriate secure Stripe payment flow.
+
+Requirements:
+
+- Create Checkout Session server-side.
+- Use the correct amount and currency.
+- Store the internal payment reference.
+- Handle successful payment.
+- Verify payment using Stripe's server-side API/webhook.
+- Prevent duplicate payment processing.
+- Never expose Stripe secret keys.
+
+==================================================
+PAYPAL
+==================================================
+
+Implement a secure PayPal payment flow.
+
+Requirements:
+
+- Create order server-side.
+- Redirect Guest to PayPal approval.
+- Capture payment server-side.
+- Verify the payment.
+- Match the payment amount and currency.
+- Update the payment status only after successful verification.
+
+==================================================
+CRYPTOCURRENCY PAYMENTS
+==================================================
+
+Implement cryptocurrency payment support using a legitimate payment processor/API rather than attempting to directly process blockchain payments insecurely.
+
+The Admin must be able to:
+
+- Enable/disable crypto payments.
+- Configure supported cryptocurrency options.
+- Configure payment processor credentials.
+- View payment status.
+
+The system must:
+
+- Generate a unique payment reference.
+- Generate a payment request through the selected crypto provider.
+- Display payment instructions or checkout.
+- Track pending, confirmed, failed, and expired payments.
+- Verify payment through the provider/webhook.
+- Never manually mark crypto payments as successful without verification.
+
+Do not use fake crypto payment confirmation.
+
+==================================================
+MANUAL BANK TRANSFER
+==================================================
+
+Support manual bank transfer as a payment method.
+
+The Admin should be able to configure:
+
+- Bank name
+- Account name
+- Account number
+- Routing information where applicable
+- Payment instructions
+
+When the Guest selects bank transfer:
+
+- Display the payment instructions.
+- Generate a unique payment reference.
+- Allow the Guest to submit proof of payment if required.
+- Keep payment status as Pending until Admin verifies it.
+- Allow Admin to Approve or Reject the payment.
+
+Never automatically mark manual bank transfers as paid.
+
+==================================================
+PAYMENT TRANSACTION SECURITY
+==================================================
+
+Every payment must have:
+
+- Internal payment ID
+- Unique transaction reference
+- Gateway name
+- Gateway transaction ID
+- Amount
+- Currency
+- Shipment ID
+- Payment request ID
+- Status
+- Timestamps
+
+Use database transactions where necessary.
+
+Prevent:
+
+- Duplicate payment processing
+- Amount manipulation
+- Currency manipulation
+- Transaction reference reuse
+- Unauthorized payment status changes
+- Guest access to other shipments
+- Payment confirmation without server-side verification
+
+The amount used for payment must come from the server-side payment request.
+
+Never trust the amount sent by the Guest's browser.
+
+==================================================
+WEBHOOK SYSTEM
+==================================================
+
+Implement gateway webhook endpoints where required.
+
+Each webhook must:
+
+- Validate authenticity/signature.
+- Identify the correct payment.
+- Verify the transaction with the gateway where appropriate.
+- Be idempotent.
+- Avoid duplicate processing.
+- Return the correct response to the gateway.
+
+If the same webhook is received multiple times, the payment must not be processed multiple times.
+
+==================================================
+PAYMENT STATUS FLOW
+==================================================
+
+Use a reliable payment state system:
+
+PENDING
+    ↓
+PROCESSING
+    ↓
+PAID
+
+Failure:
+
+PENDING → FAILED
+
+Expiration:
+
+PENDING → EXPIRED
+
+Refund:
+
+PAID → REFUNDED
+
+Only authorized server-side processes should change payment statuses.
+
+==================================================
+ADMIN PAYMENT MANAGEMENT
+==================================================
+
+Create a professional Admin payment management section.
+
+The Admin must be able to:
+
+- View all payments.
+- Search by tracking number.
+- Search by transaction reference.
+- Filter by gateway.
+- Filter by payment status.
+- Filter by date.
+- View payment details.
+- View transaction information.
+- View shipment information.
+- View payment history.
+- Approve/reject manual payments.
+- Issue refunds where the gateway supports it.
+
+Do not allow the Admin to manually change a gateway-verified successful payment to an arbitrary status without proper authorization and audit logging.
+
+==================================================
+PAYMENT HISTORY AND AUDIT LOGS
+==================================================
+
+Record important payment events:
+
+- Payment created
+- Checkout initialized
+- Payment attempt
+- Payment successful
+- Payment failed
+- Webhook received
+- Payment verified
+- Manual payment approved
+- Manual payment rejected
+- Refund issued
+
+Record:
+
+- Date/time
+- Payment ID
+- Transaction reference
+- Gateway
+- Previous status
+- New status
+- Admin responsible where applicable
+
+Never log secret keys or sensitive credentials.
+
+==================================================
+GUEST PAYMENT EXPERIENCE
+==================================================
+
+The Guest does not need to create an account.
+
+The Guest flow is:
+
+Enter tracking number
+        ↓
+View exact shipment
+        ↓
+View active payment request
+        ↓
+Choose an enabled payment gateway
+        ↓
+Pay securely
+        ↓
+Return to tracking page
+        ↓
+View verified payment status
+
+The Guest must not be able to:
+
+- Change the payment amount.
+- Change the currency.
+- Access another shipment.
+- Modify payment status.
+- Access Admin settings.
+- Access payment credentials.
+
+==================================================
+PAYMENT RECEIPT
+==================================================
+
+After a successful payment, display a professional payment receipt containing:
+
+- Company logo
+- Company name
+- Tracking number
+- Payment reason
+- Amount
+- Currency
+- Gateway
+- Transaction reference
+- Gateway transaction ID where appropriate
+- Payment status
+- Payment date
+- Barcode where appropriate
+- QR code where appropriate
+
+The receipt must be printable and connected to the exact payment transaction.
+
+==================================================
+DATABASE AND ARCHITECTURE
+==================================================
+
+Inspect the existing project before making changes.
+
+Reuse existing:
+
+- Shipment models
+- Payment models
+- Settings system
+- Admin authentication
+- Tracking system
+
+Do not create duplicate systems unnecessarily.
+
+If required, create proper migrations and relationships.
+
+Use a modular architecture such as:
+
+PaymentGatewayInterface
+        ↓
+FlutterwaveGateway
+StripeGateway
+PayPalGateway
+CryptoGateway
+BankTransferGateway
+
+The payment request system should communicate with the selected gateway through the appropriate gateway implementation.
+
+==================================================
+TESTING REQUIREMENTS
+==================================================
+
+Before declaring the implementation complete, test:
+
+1. Admin enables Flutterwave.
+2. Flutterwave appears to Guest.
+3. Admin disables Flutterwave.
+4. Flutterwave disappears from Guest payment options.
+5. Disabled gateway cannot be used through a direct URL.
+6. Admin creates a payment request.
+7. Guest sees the correct payment request.
+8. Guest cannot change the amount.
+9. Payment reference is unique.
+10. Successful payment is verified server-side.
+11. Failed payment is correctly recorded.
+12. Duplicate webhook does not duplicate payment.
+13. Manual bank transfer remains pending until Admin approval.
+14. Crypto payment status is verified.
+15. Stripe payment is verified.
+16. PayPal payment is verified.
+17. Payment belongs to the correct shipment.
+18. Guest cannot access another shipment's payment.
+19. Secret keys are never exposed.
+20. Payment receipt displays correct data.
+21. Admin payment settings are saved correctly.
+22. All enabled/disabled gateway toggles work.
+23. Invalid credentials produce a safe error.
+24. Payment amounts cannot be manipulated from the browser.
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Build a real, secure, modular, multi-payment gateway system.
+
+Do not create fake payment buttons.
+
+Do not create static gateway settings.
+
+Do not mark payments successful without server-side verification.
+
+Do not trust payment amounts from the Guest's browser.
+
+Do not expose secret keys.
+
+Do not break the existing shipment, tracking, Admin, or Guest systems.
+
+The final architecture must allow the Admin to control all available payment gateways from Admin Settings, while the Guest can pay for a specific shipment payment request without creating an account.
+
+Inspect the existing Laravel project first, then implement and test the complete system end-to-end.
+```
