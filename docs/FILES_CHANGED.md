@@ -1,6 +1,6 @@
 # Files Changed
 
-This is the record of changes made while preparing the repository for OgaHosting deployment. No application source code was modified because the application source is not present in this repository.
+This is the record of changes made while preparing the repository for OgaHosting deployment. Application source was restored from the authoritative sibling copy; no application logic was edited.
 
 ## Added
 
@@ -23,18 +23,31 @@ This is the record of changes made while preparing the repository for OgaHosting
 | `docs/BACKUP_AND_ROLLBACK.md` | File/database backup and rollback procedures. |
 | `docs/FEATURE_TEST_REPORT.md` | Honest feature-by-feature test status. |
 | `docs/GITHUB_TO_OGAHOSTING.md` | GitHub preparation and connection guide. |
-| `docs/MISSING_REQUIREMENTS.md` | Missing source, hosting information, and credentials. |
+| `docs/MISSING_REQUIREMENTS.md` | Remaining hosting information, credentials, and security actions. |
 | `docs/FILES_CHANGED.md` | This file. |
 | `deployment/cpanel.yml.example` | Inactive cPanel Git deployment template with placeholders. |
 | `deployment/github-actions-deploy.example.yml` | Inactive GitHub Actions deployment template with placeholders. |
 | `deployment/public.htaccess.example` | Reference Apache rewrite/security rules. |
 | `deployment/public_html-index.php.example` | Reference front controller for a `public_html` fallback layout. |
 
+## Restored from authoritative source (`..\..\Fed\FedExUs\backend`)
+
+| Path | Notes |
+| --- | --- |
+| `backend/app/`, `backend/bootstrap/`, `backend/config/`, `backend/routes/`, `backend/resources/`, `backend/tests/` | Full Laravel application source, excluding `bootstrap/cache`. |
+| `backend/database/migrations/`, `backend/database/seeders/` | 27 migrations and seeders; `.sql` dumps excluded. |
+| `backend/artisan`, `backend/composer.json`, `backend/composer.lock` | CLI and PHP dependency manifests. |
+| `backend/package.json`, `backend/package-lock.json`, `backend/vite.config.js`, `backend/tailwind.config.js`, `backend/postcss.config.js`, `backend/phpunit.xml` | Frontend/test configuration. |
+| `backend/public/index.php`, `backend/public/.htaccess`, `backend/public/build/` | Front controller, rewrites, and generated production assets; `public/storage` and `public/hot` excluded. |
+
 ## Modified
 
 | File | Purpose |
 | --- | --- |
-| `README.md` | Replaced the placeholder README with project overview, deployment status, and links to the deployment docs. |
+| `README.md` | Project overview, locally verified status, and deployment doc links. |
+| `.gitignore` | Added `/backend/public/hot` and `/backend/public/storage` exclusions. |
+| `backend/.env.example` | Added confirmed admin security, logging, mail, database URL, Redis, Sanctum, and proxy keys. |
+| `docs/HOSTING_COMPATIBILITY_REPORT.md`, `docs/FEATURE_TEST_REPORT.md`, `docs/MISSING_REQUIREMENTS.md` | Updated to reflect restored source, local verification results, and remaining blockers. |
 
 ## Untracked (files remain on disk)
 
@@ -54,7 +67,7 @@ The following categories are removed from Git tracking in the security commit:
 
 ## Not changed
 
-- No Laravel application code was edited (it is not present).
+- No Laravel application logic was edited; source was copied as-is from the authoritative sibling backend.
 - No database data was modified.
 - No production system was contacted.
 - No deployment was performed.

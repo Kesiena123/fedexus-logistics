@@ -4,9 +4,11 @@ Logistics, shipment tracking, and payment management application built on Larave
 
 ## Status
 
-**Not deployment-ready yet.** The repository currently does not contain the Laravel application source (`backend/app`, `backend/config`, `backend/routes`, `backend/resources`, `backend/database/migrations`, `backend/artisan`, `backend/composer.json`, `backend/public/index.php`). The dependency tree, database dumps, compiled caches, sessions, and one uploaded photo are present, but the application cannot boot without the missing source.
+**Source restored and locally verified; not yet deployed.** The Laravel application source is now in `backend/`. Locally verified: `php artisan --version` (Laravel 12.64.0), `php artisan route:list` (171 routes), `composer validate`, and `npm run build` all succeed on PHP 8.2.12 / Node 25.2.1.
 
-See [`docs/HOSTING_COMPATIBILITY_REPORT.md`](docs/HOSTING_COMPATIBILITY_REPORT.md) for the full audit and [`docs/MISSING_REQUIREMENTS.md`](docs/MISSING_REQUIREMENTS.md) for the exact list of missing files, hosting details, and credentials.
+The project is **not deployment-ready** until OgaHosting capabilities are confirmed, the exposed Aiven credentials are rotated, a production `backend/.env` is created, and runtime features are tested against the real host.
+
+See [`docs/HOSTING_COMPATIBILITY_REPORT.md`](docs/HOSTING_COMPATIBILITY_REPORT.md) for the full audit and [`docs/MISSING_REQUIREMENTS.md`](docs/MISSING_REQUIREMENTS.md) for remaining hosting details and credentials.
 
 ## Stack
 
@@ -30,7 +32,7 @@ See [`docs/HOSTING_COMPATIBILITY_REPORT.md`](docs/HOSTING_COMPATIBILITY_REPORT.m
 | [`docs/BACKUP_AND_ROLLBACK.md`](docs/BACKUP_AND_ROLLBACK.md) | Backup and rollback procedures |
 | [`docs/GITHUB_TO_OGAHOSTING.md`](docs/GITHUB_TO_OGAHOSTING.md) | GitHub preparation and host connection |
 | [`docs/FEATURE_TEST_REPORT.md`](docs/FEATURE_TEST_REPORT.md) | Feature-by-feature test status |
-| [`docs/MISSING_REQUIREMENTS.md`](docs/MISSING_REQUIREMENTS.md) | Missing source, hosting info, credentials |
+| [`docs/MISSING_REQUIREMENTS.md`](docs/MISSING_REQUIREMENTS.md) | Remaining hosting info, credentials, and security actions |
 | [`docs/FILES_CHANGED.md`](docs/FILES_CHANGED.md) | Change record |
 
 Inactive deployment templates are under [`deployment/`](deployment/). They must be verified against the real hosting account before being enabled.

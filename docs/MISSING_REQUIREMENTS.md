@@ -4,32 +4,27 @@ Everything in this document must be resolved before the project can be declared 
 
 ---
 
-## 1. Application source (blocker)
+## 1. Application source (resolved)
 
-The following are absent from the repository and must be restored from the authoritative copy:
+The source was restored from the authoritative sibling copy at `..\..\Fed\FedExUs\backend`, excluding `vendor/`, `node_modules/`, `.env`, logs, cookies, SQL dumps, and local storage.
 
-| Path | Why it is required |
+| Path | Status |
 | --- | --- |
-| `backend/app/` | Controllers, models, middleware, providers, jobs, policies, services |
-| `backend/bootstrap/app.php` | Laravel application bootstrap |
-| `backend/bootstrap/providers.php` | Provider registration (Laravel 11/12 style) |
-| `backend/config/` | Database, mail, filesystems, session, cache, queue, services, payments |
-| `backend/database/migrations/` | Reproducible schema changes |
-| `backend/resources/` | Blade views, CSS, JavaScript |
-| `backend/routes/` | Web, API, console routes |
-| `backend/tests/` | Test suite |
-| `backend/artisan` | CLI entry point |
-| `backend/composer.json` | Dependency manifest |
-| `backend/composer.lock` | Reproducible dependency lock |
-| `backend/package.json` | Frontend dependency manifest |
-| `backend/package-lock.json` | Reproducible frontend lock |
-| `backend/vite.config.js` | Vite build configuration |
-| `backend/tailwind.config.js` | Tailwind configuration |
-| `backend/postcss.config.js` | PostCSS configuration |
-| `backend/public/index.php` | HTTP front controller |
-| `backend/public/.htaccess` | Apache rewrite/security rules (or server equivalent) |
+| `backend/app/` | ✅ Restored |
+| `backend/bootstrap/app.php`, `backend/bootstrap/providers.php` | ✅ Restored |
+| `backend/config/` | ✅ Restored |
+| `backend/database/migrations/`, `backend/database/seeders/` | ✅ Restored (27 migrations) |
+| `backend/resources/` | ✅ Restored |
+| `backend/routes/` | ✅ Restored (171 routes) |
+| `backend/tests/` | ✅ Restored |
+| `backend/artisan` | ✅ Restored |
+| `backend/composer.json`, `backend/composer.lock` | ✅ Restored, `composer validate` passes |
+| `backend/package.json`, `backend/package-lock.json` | ✅ Restored |
+| `backend/vite.config.js`, `backend/tailwind.config.js`, `backend/postcss.config.js` | ✅ Restored |
+| `backend/public/index.php`, `backend/public/.htaccess` | ✅ Restored |
+| `backend/public/build/` | ✅ Built with Vite 6.4.3 |
 
-Until these exist, the site cannot be booted, tested, built, or deployed.
+Local verification: Laravel 12.64.0 boots on PHP 8.2.12; 171 routes register; the frontend builds. No application logic was edited.
 
 ---
 
@@ -76,48 +71,46 @@ Obtain from OgaHosting support or the control panel:
 | Stripe publishable key, secret key, webhook secret | Stripe payments | ❌ Missing / confirm names used in source |
 | PayPal client ID, client secret, mode | PayPal payments | ❌ Missing |
 | Paystack public key, secret key | Paystack payments | ❌ Missing |
-| Map tile provider key (if required) | Tracking map | ❌ Confirm provider and key |
-| QR code library/key (if external) | QR rendering | ❌ Confirm in source |
+| Map tile provider | Tracking map | ✅ OpenStreetMap tiles, no API key required |
+| QR code | Receipt rendering | ✅ Client-side `qrcode@1.5.3` loaded from jsDelivr; allow CDN or vendor the script locally |
 
-The existing `.env` contains `STRIPE_SECRET`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `FLUTTERWAVE_SECRET_KEY`, and `PAYSTACK_SECRET_KEY` names. The restored source must confirm the exact variable names it reads. Do not rename variables blindly.
+Payment gateway credentials are stored in the database `payment_settings` table and managed from the Admin payment settings screens (encrypted). The gateway classes read `PaymentSetting::$secret_key`/related fields, not `.env` directly. `.env` gateway keys are retained only as optional seeding/reference values; do not assume they activate a gateway. Confirm test/live mode in Admin Settings.
 
 ---
 
 ## 4. Security actions
 
+- [x] Remove `.env`, credential notes, cookies, sessions, logs, uploads, and SQL dumps from Git tracking (committed and pushed).
 - [ ] Rotate the Aiven database password that was committed in `MySQL Connection Details.txt` and `backend/.env`.
-- [ ] Remove `.env`, credential notes, cookies, sessions, logs, uploads, and SQL dumps from Git tracking.
 - [ ] Decide whether to purge secrets from Git history (required if the repo was ever public/shared).
 - [ ] Store the production `APP_KEY` in a password manager.
 - [ ] Keep the GitHub repository private until verification is complete.
-- [ ] Confirm whether the uploaded shipment photo in the repository is sensitive and remove it from history if necessary.
+- [ ] Confirm whether the uploaded shipment photo in history is sensitive and purge history if necessary.
 
 ---
 
-## 5. Configuration decisions to confirm
+## 5. Configuration decisions confirmed from source
 
-These cannot be confirmed without the restored source:
-
-1. Exact storage disk used for shipment attachments (`public` per the schema, confirm code).
-2. Maximum number/size of shipment photos.
-3. Whether sessions are expected to use `file` (no `sessions` table exists) — current `.env` uses `file`.
-4. Whether the queue is expected to stay `sync`.
-5. Whether Reverb/WebSockets are actually used or only configured.
-6. Whether the live chat uses AJAX polling or broadcasting.
-7. Whether the map tile provider requires a key.
-8. Whether QR codes are generated server-side or client-side.
-9. Which payment gateways are enabled in Admin settings and their live/test modes.
-10. Which scheduled tasks/cron jobs the application registers.
-11. Whether the app uses `public/build` or a different asset path.
-12. Whether any feature depends on Redis, Supervisor, or a persistent Node process (none should be assumed).
+1. Shipment attachments use the `public` disk and are served via `public/storage`.
+2. Shipment photos: maximum 10 files, 5 MB each, `jpg/jpeg/png/webp`. Chat attachments: maximum 5 files, 10 MB each.
+3. Sessions use `file`; there is no `sessions` table in the schema. Keep `SESSION_DRIVER=file`.
+4. Queue stays `sync`; no worker or Supervisor required.
+5. Broadcast events exist (`GuestChatMessageSent`, `ShipmentUpdated`) and implement `ShouldBroadcast`, but `BROADCAST_CONNECTION=log` disables real-time delivery. Keep `log` on shared hosting.
+6. Live chat and tracking use AJAX polling (5 s and 4 s intervals respectively), with WebSocket fallback only if configured.
+7. Tracking maps use OpenStreetMap tiles (`tile.openstreetmap.org`); no API key is required.
+8. QR codes are generated client-side with `qrcode@1.5.3` from jsDelivr; allow the CDN or vendor the script locally.
+9. Payment gateways are enabled and configured in Admin Settings and stored (encrypted) in `payment_settings`; confirm live/test mode there, not in `.env`.
+10. No scheduled tasks are registered in `routes/console.php`; no cron job is required.
+11. The app uses the standard Vite `public/build` manifest, which is included in the repository.
+12. No feature requires Redis, Supervisor, or a persistent Node process. Reverb is installed but not required.
 
 ---
 
 ## 6. Readiness statement
 
-The project is **not deployment-ready**. The repository now contains a secure `.gitignore`, a production `.env.example`, deployment documentation, and inactive deployment templates. The remaining blockers are:
+The project is **not deployment-ready**. The source is restored and boot-verified locally, the repository is secured for the current commit, and the deployment documentation and templates are in place. The remaining blockers are:
 
-1. Missing application source and manifests.
-2. Unconfirmed OgaHosting capabilities.
-3. Unrotated exposed credentials.
-4. No runtime tests possible until (1) is resolved.
+1. Unconfirmed OgaHosting capabilities and account details.
+2. Unrotated exposed credentials still present in Git history.
+3. No production `backend/.env` or server-side Composer install yet.
+4. No runtime feature testing against a safe database or the real host.

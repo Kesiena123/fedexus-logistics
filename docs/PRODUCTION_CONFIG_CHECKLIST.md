@@ -6,10 +6,10 @@ Use this checklist before, during, and after the OgaHosting deployment. Items ma
 
 ## 1. Source and repository
 
-- [ ] **[BLOCKER]** Full Laravel source restored (`app/`, `config/`, `routes/`, `resources/`, `database/migrations/`, `artisan`, `bootstrap/app.php`, `bootstrap/providers.php`).
-- [ ] **[BLOCKER]** `composer.json` and `composer.lock` restored and consistent.
-- [ ] **[BLOCKER]** `package.json` and `package-lock.json` restored.
-- [ ] **[BLOCKER]** `public/index.php` and `public/.htaccess` restored.
+- [x] **[BLOCKER]** Full Laravel source restored (`app/`, `config/`, `routes/`, `resources/`, `database/migrations/`, `artisan`, `bootstrap/app.php`, `bootstrap/providers.php`).
+- [x] **[BLOCKER]** `composer.json` and `composer.lock` restored and consistent (`composer validate` passes).
+- [x] **[BLOCKER]** `package.json` and `package-lock.json` restored.
+- [x] **[BLOCKER]** `public/index.php` and `public/.htaccess` restored.
 - [ ] `.env` is not tracked in Git.
 - [ ] `vendor/`, `node_modules/`, `.npm-cache/`, logs, sessions, compiled views, SQL dumps, and uploads are not tracked.
 - [ ] Real credentials are not present in Git history for the current HEAD. (Rotate anything that was previously committed.)

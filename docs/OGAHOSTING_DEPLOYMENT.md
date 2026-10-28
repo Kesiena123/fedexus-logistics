@@ -4,7 +4,7 @@ This is the main deployment runbook for the FreightFlow / FedExUS Laravel applic
 
 > **Placeholders.** Values written as `<...>` are account-specific and must be obtained from OgaHosting. This guide deliberately does not invent paths, PHP versions, database names, or capabilities. See `docs/MISSING_REQUIREMENTS.md` for the information you must collect first.
 
-> **Current blocker.** This repository does not yet contain the Laravel application source (`app/`, `config/`, `routes/`, `resources/`, `database/migrations/`, `artisan`, `composer.json`, `public/index.php`). Restore those files before starting. See `docs/HOSTING_COMPATIBILITY_REPORT.md`.
+> **Current status.** The Laravel source is present in `backend/` and boot-verified locally (Laravel 12.64.0, 171 routes, Vite build succeeds). The remaining blockers are OgaHosting capability confirmation, production `.env` creation, and credential rotation. See `docs/HOSTING_COMPATIBILITY_REPORT.md` and `docs/MISSING_REQUIREMENTS.md`.
 
 ---
 
@@ -93,9 +93,9 @@ Use `deployment/public_html-index.php.example` as the template. Replace every `<
 
 Complete `docs/BACKUP_AND_ROLLBACK.md` first. Do not continue until both backups exist and you have verified they can be downloaded.
 
-### Step 2 — Restore the application source into this repository
+### Step 2 — Confirm the application source is present
 
-The repository must contain the full Laravel project before deployment:
+The repository contains the full Laravel project. Confirm these exist before continuing:
 
 ```text
 backend/app/
@@ -116,9 +116,10 @@ backend/tailwind.config.js
 backend/postcss.config.js
 backend/public/index.php
 backend/public/.htaccess
+backend/public/build/
 ```
 
-Commit the restored source. Do not commit `vendor/`, `node_modules/`, `.env`, uploads, logs, or SQL dumps.
+Do not commit or upload `vendor/`, `node_modules/`, `.env`, uploads, logs, or SQL dumps.
 
 ### Step 3 — Create the production database and user
 
@@ -284,9 +285,9 @@ If `artisan` is unavailable, use the host's file manager and the manual cache-cl
 
 ---
 
-## 5. Cron (only if supported and required)
+## 5. Cron (not required for the current feature set)
 
-If the restored source registers scheduled tasks, add a single cron entry:
+No scheduled tasks are registered in `routes/console.php`. Add a cron entry only if that changes:
 
 ```cron
 * * * * * cd /home/<account>/fedexus && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1
@@ -303,7 +304,7 @@ Replace `/usr/local/bin/php` with the real PHP CLI path confirmed by OgaHosting.
 | Secret removal from Git | Yes, in this repository |
 | `.env.example` generation | Yes |
 | Hosting capability verification | **No — must be done manually with OgaHosting** |
-| Source restoration | **No — currently missing and must be supplied** |
+| Source restoration | ✅ Complete and committed |
 | Database creation | **No — control panel** |
 | Composer install | Only if SSH/Composer confirmed |
 | Frontend build | Local build recommended |

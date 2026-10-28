@@ -223,6 +223,6 @@ Do not force push unless you intentionally rewrote history and coordinated with 
 | cPanel deploy | ❌ Template only |
 | GitHub Actions deploy | ❌ Template only |
 | Host capability detection | ❌ Manual |
-| Source restoration | ❌ Manual (currently missing) |
+| Source restoration | ✅ Complete and committed |
 | Database import | ❌ Manual |
 | Post-deploy smoke test | ❌ Manual |
