@@ -35,7 +35,7 @@ This is the record of changes made while preparing the repository for OgaHosting
 | Path | Notes |
 | --- | --- |
 | `backend/app/`, `backend/bootstrap/`, `backend/config/`, `backend/routes/`, `backend/resources/`, `backend/tests/` | Full Laravel application source, excluding `bootstrap/cache`. |
-| `backend/database/migrations/`, `backend/database/seeders/` | 27 migrations and seeders; `.sql` dumps excluded. |
+| `backend/database/migrations/`, `backend/database/seeders/` | 31 migration files and seeders; `.sql` dumps excluded. The dumps have 27 applied; 5 are pending. |
 | `backend/artisan`, `backend/composer.json`, `backend/composer.lock` | CLI and PHP dependency manifests. |
 | `backend/package.json`, `backend/package-lock.json`, `backend/vite.config.js`, `backend/tailwind.config.js`, `backend/postcss.config.js`, `backend/phpunit.xml` | Frontend/test configuration. |
 | `backend/public/index.php`, `backend/public/.htaccess`, `backend/public/build/` | Front controller, rewrites, and generated production assets; `public/storage` and `public/hot` excluded. |

@@ -10,7 +10,7 @@
 
 ## 1. Executive summary
 
-The repository now contains the complete Laravel application source, Composer and npm manifests and lock files, 27 migrations, 171 routes, and a production frontend build. The app boots locally and the frontend builds successfully.
+The repository now contains the complete Laravel application source, Composer and npm manifests and lock files, 31 migration files, 171 routes, and a production frontend build. The app boots locally and the frontend builds successfully. The two 29-table dumps have only 27 migrations applied, leaving 5 pending migrations to reconcile before production.
 
 The source was restored from the authoritative sibling copy at `..\..\Fed\FedExUs\backend`, excluding `vendor/`, `node_modules/`, `.env`, logs, cookies, SQL dumps, and local storage. No application logic was edited during the copy.
 
@@ -31,7 +31,7 @@ The most important operational findings are:
 | Path | Notes |
 | --- | --- |
 | `backend/app/`, `backend/bootstrap/`, `backend/config/`, `backend/routes/`, `backend/resources/`, `backend/tests/` | Application source restored and tracked. |
-| `backend/database/migrations/`, `backend/database/seeders/` | 27 migrations plus seeders restored and tracked. |
+| `backend/database/migrations/`, `backend/database/seeders/` | 31 migration files plus seeders restored and tracked; the dumps record 27 as applied. |
 | `backend/artisan`, `backend/composer.json`, `backend/composer.lock` | CLI entry point and reproducible PHP dependencies restored. |
 | `backend/package.json`, `backend/package-lock.json`, `backend/vite.config.js`, `backend/tailwind.config.js`, `backend/postcss.config.js` | Frontend manifests and build configuration restored. |
 | `backend/public/index.php`, `backend/public/.htaccess`, `backend/public/build/` | Front controller, rewrite rules, and production assets restored/built. |
@@ -165,6 +165,16 @@ Observations:
 - `personal_access_tokens` supports Sanctum.
 
 The `logistics_db.sql` and `logistics_db_infinityfree.sql` dumps both contain 27 rows in `migrations` and 144 `INSERT` statements, including real-looking shipments, admin audit logs, chat messages, and payment requests. `logistics_db_local.sql` is a raw export with only one migration row and should not be used for the production upgrade.
+
+The restored source has **31 migration files**, while those dumps record **27 applied migrations**. After importing a dump, 5 migrations are pending:
+
+- `2026_07_30_150632_optimize_database_indexes_and_cleanup` (adds indexes; safe/idempotent)
+- `2026_07_30_160000_remove_unused_tables` (**destructive**; drops `messages`, `conversation_user`, `conversations`, `addresses`)
+- `2026_09_13_000001_set_website_url_setting` (inserts the `website_url` setting)
+- `2026_09_13_000002_set_company_email_setting` (inserts the `company_email` setting)
+- `2026_09_13_000003_add_shipment_location_fields` (adds shipment coordinates and creates `shipment_location_history`)
+
+One applied dump migration, `2026_07_21_000001_create_addresses_table`, has no source file. Do **not** run `php artisan migrate --force` blindly after importing a dump; take a backup, review the five files, confirm the old `addresses`/`conversations` data is disposable, then run them deliberately.
 
 ---
 
@@ -323,8 +333,8 @@ Not performed (requires hosting access or a safe test database):
 | Application source | ✅ Restored and tracked |
 | Composer manifest/lock | ✅ Present and valid |
 | Front controller and rewrite rules | ✅ Present |
-| Database schema | ✅ Dumps and 27 migrations available |
-| Database migration path | ✅ Migrations restored; run on host after backup |
+| Database schema | ✅ Dumps plus 31 migration files available |
+| Database migration path | ⚠️ 5 migrations pending vs dumps; one destructive drop must be reviewed after backup |
 | Secrets removed from Git HEAD | ✅ Untracked in current commit |
 | Secrets removed from Git history | ❌ Still in history; rotation required |
 | Production `.env.example` | ✅ Complete template |

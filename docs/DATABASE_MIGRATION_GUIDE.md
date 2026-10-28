@@ -144,7 +144,7 @@ ORDER BY TABLE_NAME;
 Expected:
 
 - All tables use `InnoDB` and `utf8mb4_unicode_ci`.
-- `migrations` matches the restored source's migration list (27 rows for the two 29-table dumps).
+- `migrations` contains 27 rows for the two 29-table dumps, but the restored source has 31 migration files. Five migrations remain pending after import; see section 8.1 before running `migrate`.
 - Attachment rows have corresponding files under `storage/app/public/shipment-attachments/`.
 
 Check foreign keys:
@@ -205,6 +205,30 @@ Rules:
 - Never use `migrate:fresh` or `db:wipe` on production.
 
 If Artisan is unavailable, do not run a public migration script. Ask OgaHosting for SSH or run the equivalent reviewed SQL manually through phpMyAdmin.
+
+### 8.1 Known reconciliation after importing the committed dumps
+
+The two 29-table dumps (`logistics_db.sql`, `logistics_db_infinityfree.sql`) record **27 applied migrations**; the restored source contains **31 files**. Expect 5 pending migrations:
+
+| Migration | Effect | Risk |
+| --- | --- | --- |
+| `2026_07_30_150632_optimize_database_indexes_and_cleanup` | Adds missing indexes, catches duplicate-index errors | Safe |
+| `2026_07_30_160000_remove_unused_tables` | Drops `messages`, `conversation_user`, `conversations`, `addresses` | **Destructive** — back up first and confirm those tables are not needed |
+| `2026_09_13_000001_set_website_url_setting` | Upserts `admin_settings.website_url` | Safe |
+| `2026_09_13_000002_set_company_email_setting` | Upserts `admin_settings.company_email` | Safe |
+| `2026_09_13_000003_add_shipment_location_fields` | Adds shipment coordinate columns, creates `shipment_location_history`, backfills from tracking data | Schema change; run after backup |
+
+The dump also lists `2026_07_21_000001_create_addresses_table`, which is not in the source tree. That is expected: `remove_unused_tables` drops the `addresses` table anyway. Fresh installs from migrations will never create it.
+
+Recommended sequence after importing a dump:
+
+1. Back up the database.
+2. `php artisan migrate:status` and confirm exactly the five files above are pending.
+3. Confirm `conversations`, `messages`, and `addresses` contain no data that must be kept (guest chat uses `guest_chat_*` tables and is unaffected).
+4. `php artisan migrate --force`.
+5. Re-check `/admin` login, shipment tracking, payments, and the live map.
+
+If the host cannot run Artisan, apply only those five migrations' SQL manually, in filename order, and insert matching `migrations` rows afterward.
 
 ---
 

@@ -8,6 +8,8 @@ Logistics, shipment tracking, and payment management application built on Larave
 
 The project is **not deployment-ready** until OgaHosting capabilities are confirmed, the exposed Aiven credentials are rotated, a production `backend/.env` is created, and runtime features are tested against the real host.
 
+Database note: the source has 31 migration files, but the two 29-table dumps record only 27 applied migrations. Reconcile the 5 pending migrations after a backup — one of them drops legacy `conversations`, `messages`, and `addresses` tables. Follow `docs/DATABASE_MIGRATION_GUIDE.md` section 8.1.
+
 See [`docs/HOSTING_COMPATIBILITY_REPORT.md`](docs/HOSTING_COMPATIBILITY_REPORT.md) for the full audit and [`docs/MISSING_REQUIREMENTS.md`](docs/MISSING_REQUIREMENTS.md) for remaining hosting details and credentials.
 
 ## Stack

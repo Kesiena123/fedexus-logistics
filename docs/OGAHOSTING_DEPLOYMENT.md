@@ -212,7 +212,8 @@ Follow `docs/DATABASE_MIGRATION_GUIDE.md`.
 
 - Prefer a reviewed, data-clean dump or a structure-only import.
 - Do not import the demo/test data that is currently in the committed SQL dumps into a brand-new production database without review.
-- Do not run destructive migrations.
+- After importing a 29-table dump, expect **5 pending migrations**. Review guide section 8.1 first; `2026_07_30_160000_remove_unused_tables` drops legacy `conversations`, `messages`, and `addresses` tables.
+- Back up before migrating. Do not run `migrate:fresh`, `db:wipe`, or any unreviewed destructive migration.
 
 ### Step 11 — Clear and rebuild caches
 
@@ -273,7 +274,7 @@ Record results in `docs/FEATURE_TEST_REPORT.md`.
 3. Upload the new application files **without deleting** `storage/app/public`, `.env`, or `public/storage`.
 4. Run `composer install --no-dev --optimize-autoloader` if dependencies changed.
 5. Build and upload new frontend assets.
-6. Run only approved, non-destructive migrations.
+6. Run only approved migrations after a backup; the known legacy-table drop must be explicitly approved.
 7. Clear/rebuild caches.
 8. Bring the site back up:
    ```bash

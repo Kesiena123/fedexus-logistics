@@ -13,7 +13,7 @@ The source was restored from the authoritative sibling copy at `..\..\Fed\FedExU
 | `backend/app/` | ✅ Restored |
 | `backend/bootstrap/app.php`, `backend/bootstrap/providers.php` | ✅ Restored |
 | `backend/config/` | ✅ Restored |
-| `backend/database/migrations/`, `backend/database/seeders/` | ✅ Restored (27 migrations) |
+| `backend/database/migrations/`, `backend/database/seeders/` | ✅ Restored (31 files; dumps have 27 applied, 5 pending) |
 | `backend/resources/` | ✅ Restored |
 | `backend/routes/` | ✅ Restored (171 routes) |
 | `backend/tests/` | ✅ Restored |
