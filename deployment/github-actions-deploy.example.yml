@@ -1,0 +1,113 @@
+# =============================================================================
+# INACTIVE TEMPLATE - GitHub Actions deployment over SSH/SFTP
+# =============================================================================
+# Enable this only after OgaHosting confirms SSH/SFTP access and the deploy
+# path. Copy to .github/workflows/deploy.yml and fill in the secrets:
+#
+#   Settings -> Secrets and variables -> Actions
+#     SSH_HOST        OgaHosting hostname
+#     SSH_USER        SSH username
+#     SSH_PRIVATE_KEY private key with access to the deploy path
+#     SSH_PORT        optional, default 22
+#     DEPLOY_PATH     absolute application path on the server
+#
+# Requirements before enabling:
+#   - A verified, restorable backup exists.
+#   - Composer is available on the server (or vendor/ is uploaded deliberately).
+#   - Persistent storage (storage/app/public) is never deleted.
+#   - The application source is present in the repository.
+# =============================================================================
+
+name: Deploy to OgaHosting
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ogahosting-production
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: ctype, curl, dom, fileinfo, filter, gd, hash, mbstring, openssl, pcre, pdo, pdo_mysql, session, tokenizer, xml, zip
+          coverage: none
+
+      - name: Validate Composer manifests exist
+        run: |
+          test -f backend/composer.json || { echo "backend/composer.json is missing"; exit 1; }
+          test -f backend/artisan || { echo "backend/artisan is missing"; exit 1; }
+
+      - name: Install Composer dependencies
+        working-directory: backend
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build frontend assets
+        working-directory: backend
+        run: |
+          test -f package.json || { echo "backend/package.json is missing"; exit 1; }
+          npm ci
+          npm run build
+
+      - name: Run tests (if a test suite exists)
+        working-directory: backend
+        run: |
+          if [ -d tests ] && [ -f artisan ]; then
+            php artisan test
+          else
+            echo "No test suite found; skipping."
+          fi
+
+      - name: Prepare SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy with rsync (preserves .env and uploads)
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT || 22 }}" \
+            --exclude='.git' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='node_modules' \
+            --exclude='.npm-cache' \
+            --exclude='storage/app/public' \
+            --exclude='storage/framework/cache' \
+            --exclude='storage/framework/sessions' \
+            --exclude='storage/framework/views' \
+            --exclude='storage/logs' \
+            --exclude='bootstrap/cache/*.php' \
+            --exclude='database/*.sql' \
+            --exclude='allpromt' \
+            ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+
+      - name: Rebuild caches on the server
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.SSH_PORT || 22 }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "cd '${{ secrets.DEPLOY_PATH }}' && php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache"
+
+      - name: Ensure storage link
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.SSH_PORT || 22 }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "cd '${{ secrets.DEPLOY_PATH }}' && { [ -e public/storage ] || php artisan storage:link; }"

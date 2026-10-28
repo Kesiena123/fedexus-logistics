@@ -1,0 +1,59 @@
+# =============================================================================
+# INACTIVE TEMPLATE - do not rename to .cpanel.yml until OgaHosting confirms:
+#   1. cPanel Git Version Control is available.
+#   2. The real clone/deploy path.
+#   3. The PHP CLI and Composer paths.
+#   4. That rsync is available (or replace it with cp commands).
+# =============================================================================
+#
+# Copy this file to the repository root as .cpanel.yml after confirming every
+# placeholder. cPanel runs these tasks from the repository checkout directory.
+#
+# Persistent data that must never be deleted or overwritten:
+#   - .env
+#   - storage/app/public          (shipment photos and payment proofs)
+#   - public/storage              (link to storage/app/public)
+#   - public/build                (only if assets are built on the server)
+# -----------------------------------------------------------------------------
+
+---
+deployment:
+  tasks:
+    # --- Confirm these values with OgaHosting first -------------------------
+    - export DEPLOYPATH=/home/<ACCOUNT>/<APP_DIR>
+    - export PHP_BIN=/usr/local/bin/php
+    - export COMPOSER_BIN=/usr/local/bin/composer
+
+    # --- Fail fast if the target does not exist -----------------------------
+    - /bin/test -d "$DEPLOYPATH" || { echo "DEPLOYPATH does not exist: $DEPLOYPATH"; exit 1; }
+
+    # --- Copy application code without touching persistent data -------------
+    # --delete removes stale application files but NOT the excluded paths.
+    - /usr/bin/rsync -a --delete \
+        --exclude='.git' \
+        --exclude='.env' \
+        --exclude='.env.*' \
+        --exclude='vendor' \
+        --exclude='node_modules' \
+        --exclude='.npm-cache' \
+        --exclude='storage/app/public' \
+        --exclude='storage/framework/cache' \
+        --exclude='storage/framework/sessions' \
+        --exclude='storage/framework/views' \
+        --exclude='storage/logs' \
+        --exclude='bootstrap/cache/*.php' \
+        --exclude='database/*.sql' \
+        --exclude='allpromt' \
+        ./ $DEPLOYPATH/
+
+    # --- Install production dependencies if Composer is available -----------
+    - cd "$DEPLOYPATH" && "$COMPOSER_BIN" install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+    # --- Rebuild caches ------------------------------------------------------
+    - cd "$DEPLOYPATH" && "$PHP_BIN" artisan optimize:clear
+    - cd "$DEPLOYPATH" && "$PHP_BIN" artisan config:cache
+    - cd "$DEPLOYPATH" && "$PHP_BIN" artisan route:cache
+    - cd "$DEPLOYPATH" && "$PHP_BIN" artisan view:cache
+
+    # --- Ensure the persistent storage link exists --------------------------
+    - cd "$DEPLOYPATH" && { [ -e public/storage ] || "$PHP_BIN" artisan storage:link; }

@@ -1,0 +1,45 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Fallback front controller for a "public_html" document root
+|--------------------------------------------------------------------------
+|
+| USE ONLY IF:
+|   1. OgaHosting cannot point the document root at the Laravel public/
+|      directory, AND
+|   2. The Laravel application lives OUTSIDE public_html (recommended).
+|
+| Replace every <ABSOLUTE_PATH> with the real absolute path confirmed by the
+| hosting provider. Do not guess it. Example (placeholder only):
+|
+|   /home/exampleacct/fedexus
+|
+| The authoritative file is the Laravel public/index.php that ships with the
+| application source. Prefer copying that file and adjusting its two relative
+| paths instead of using this template.
+|
+*/
+
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+$laravelPath = '<ABSOLUTE_PATH>';
+
+if (! is_dir($laravelPath)) {
+    http_response_code(500);
+    exit('Application path is not configured.');
+}
+
+if (file_exists($maintenance = $laravelPath.'/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require $laravelPath.'/vendor/autoload.php';
+
+/** @var Application $app */
+$app = require_once $laravelPath.'/bootstrap/app.php';
+
+$app->handleRequest(Request::capture());

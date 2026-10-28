@@ -1,0 +1,96 @@
+# ---------------------------------------------------------------------------
+# Secrets and environment files
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.cert
+!public/**/*.crt
+
+# Internal prompt/notes folder (development only)
+/allpromt/
+
+# Local credential / session dumps
+/MySQL Connection Details.txt
+/cookies.txt
+/response_headers.txt
+/backend/cookies.txt
+/admin_cookies.txt
+
+# ---------------------------------------------------------------------------
+# Dependencies (install with Composer / npm on the host or build locally)
+# ---------------------------------------------------------------------------
+/vendor/
+/backend/vendor/
+/vendor-cache/
+/backend/vendor-cache/
+node_modules/
+.npm-cache/
+/backend/node_modules/
+
+# ---------------------------------------------------------------------------
+# Laravel writable directories
+# Contents are ignored by the .gitignore file inside each directory, which
+# keeps the directory itself present in Git.
+# ---------------------------------------------------------------------------
+/backend/storage/*.key
+/backend/bootstrap/cache/*.php
+/backend/bootstrap/cache/*.php.tmp
+
+# ---------------------------------------------------------------------------
+# Databases and local data
+# ---------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+/backend/database/*.sql
+/backend/database/*.sqlite
+
+# ---------------------------------------------------------------------------
+# Logs, caches, build output that must not be deployed
+# ---------------------------------------------------------------------------
+*.log
+/logs/
+.vite/
+/backend/node_modules/.vite/
+/backend/node_modules/.vite-temp/
+
+# Keep production frontend assets buildable/deployable
+!/backend/public/build/
+!/backend/public/build/**
+
+# ---------------------------------------------------------------------------
+# Operating system / editor / IDE files
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------------------------
+# Archives and one-off development artefacts
+# ---------------------------------------------------------------------------
+*.zip
+*.rar
+*.7z
+/tmp/
+/temp/
+/tests/tmp/
+/.phpunit.result.cache
+/backend/.phpunit.result.cache
+/backend/tmp_check.php
+/backend/tmp_seed.php
+/backend/_check.php
+/backend/_aivimport.php
+/backend/check_audit.php
+/backend/check_certs.php
+/backend/check_page.php
+/backend/add_avast_cert.php
+/backend/composer-setup.php
